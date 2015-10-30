@@ -16,6 +16,18 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 
+  def restrict_admin_access
+    if !is_admin?
+      flash[:alert] = "You must be an admin."
+      redirect_to new_session_path
+    end
+  end
+
+  def is_admin?
+     @current_user.admin
+  end
+
   helper_method :current_user
+  helper_method :is_admin?
 
 end
